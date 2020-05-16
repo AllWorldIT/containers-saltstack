@@ -1,6 +1,6 @@
-# Listen on all protocols
-interface: '::'
-ipv6: True
+# Listen on all protocols (docker-proxy does this for us)
+#interface: '::'
+#ipv6: True
 
 # Set console logging
 log_level: info
