@@ -94,5 +94,5 @@ VOLUME ["/var/cache/salt"]
 VOLUME ["/srv"]
 
 # Health check
-HEALTHCHECK CMD salt-run manage.alived
+#HEALTHCHECK CMD salt-run manage.alived
 
