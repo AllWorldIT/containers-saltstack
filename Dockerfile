@@ -1,9 +1,9 @@
-FROM registry.gitlab.iitsp.com/allworldit/docker/alpine/v3.10:latest
+FROM registry.gitlab.iitsp.com/allworldit/docker/alpine/v3.12:latest
 
 ARG VERSION_INFO
 LABEL maintainer="Nigel Kukard <nkukard@LBSD.net>"
 
-ENV SALT_VERSION=3000.3
+ENV SALT_VERSION=3001
 
 RUN set -ex; \
 	true "Salt dependencies"; \
@@ -22,14 +22,13 @@ RUN set -ex; \
 			py3-chardet \
 			py3-idna \
 			py3-requests \
-			py3-zmq \
+			py3-pyzmq \
 			py3-crypto \
 			gmp \
 # Cherrypy
 			py3-tz \
 			py3-more-itertools \
-# In v3.11
-#			py3-pycryptodome \
+			py3-pycryptodome \
 			; \
 	apk add --no-cache --virtual .build-deps \
 			build-base \
@@ -41,7 +40,7 @@ RUN set -ex; \
 	true "Salt pip dependencies"; \
 	pip3 install --upgrade pip; \
 	pip3 install wheel; \
-	pip3 install cherrypy pycryptodome wheel; \
+	pip3 install cherrypy wheel; \
 	true "Salt build"; \
 	wget "https://pypi.io/packages/source/s/salt/salt-${SALT_VERSION}.tar.gz"; \
 	tar -zxf "salt-${SALT_VERSION}.tar.gz"; \
