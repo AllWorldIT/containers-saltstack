@@ -69,7 +69,7 @@ COPY etc/supervisor/conf.d/salt-master.conf /etc/supervisor/conf.d/salt-master.c
 COPY init.d/50-salt-master.sh /docker-entrypoint-init.d/50-salt-master.sh
 COPY pre-init-tests.d/50-salt-master.sh /docker-entrypoint-pre-init-tests.d/50-salt-master.sh
 COPY tests.d/50-salt-master.sh /docker-entrypoint-tests.d/50-salt-master.sh
-RUN set -eux \
+RUN set -eux; \
 		chown root:root \
 			/etc/supervisor/conf.d/salt-master.conf \
 			/docker-entrypoint-init.d/50-salt-master.sh \
