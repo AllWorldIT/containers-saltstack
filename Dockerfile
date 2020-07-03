@@ -70,6 +70,7 @@ COPY init.d/50-salt-master.sh /docker-entrypoint-init.d/50-salt-master.sh
 COPY pre-init-tests.d/50-salt-master.sh /docker-entrypoint-pre-init-tests.d/50-salt-master.sh
 COPY tests.d/50-salt-master.sh /docker-entrypoint-tests.d/50-salt-master.sh
 RUN set -eux; \
+		mkdir -p /var/log/salt/key; \
 		chown root:root \
 			/etc/supervisor/conf.d/salt-master.conf \
 			/docker-entrypoint-init.d/50-salt-master.sh \
@@ -82,9 +83,12 @@ RUN set -eux; \
 			/docker-entrypoint-tests.d/50-salt-master.sh \
 			/docker-entrypoint-pre-init-tests.d/50-salt-master.sh; \
 		chown root:salt \
-			/etc/salt/master; \
+			/etc/salt/master \
+			/var/log/salt/key; \
 		chmod 0640 \
-			/etc/salt/master
+			/etc/salt/master; \
+		chmod 0770 \
+			/var/log/salt/key
 
 EXPOSE 4505 4506
 
