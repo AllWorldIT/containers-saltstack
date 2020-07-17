@@ -1,6 +1,6 @@
 FROM registry.gitlab.iitsp.com/allworldit/docker/alpine/v3.12:latest
 
-ARG VERSION_INFO
+ARG VERSION_INFO=
 LABEL maintainer="Nigel Kukard <nkukard@LBSD.net>"
 
 ENV SALT_VERSION=3001
