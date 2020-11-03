@@ -3,7 +3,7 @@ FROM registry.gitlab.iitsp.com/allworldit/docker/alpine/v3.12:latest
 ARG VERSION_INFO=
 LABEL maintainer="Nigel Kukard <nkukard@LBSD.net>"
 
-ENV SALT_VERSION=3001
+ENV SALT_VERSION=3002.1
 
 RUN set -ex; \
 	true "Salt dependencies"; \
@@ -43,7 +43,8 @@ RUN set -ex; \
 	pip3 install cherrypy wheel; \
 	true "Salt build"; \
 	wget "https://pypi.io/packages/source/s/salt/salt-${SALT_VERSION}.tar.gz"; \
-	tar -zxf "salt-${SALT_VERSION}.tar.gz"; \
+	# NK: Touch files as the tar.gz has 1980 dates, which breaks setup.py build
+	tar -zxmf "salt-${SALT_VERSION}.tar.gz"; \
 	cd "salt-${SALT_VERSION}"; \
 	python3 setup.py build; \
 	python3 setup.py --salt-pidfile-dir="/run/salt" install --optimize=1 --skip-build; \
