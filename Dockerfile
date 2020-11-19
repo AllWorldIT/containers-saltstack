@@ -56,7 +56,7 @@ RUN set -ex; \
 	true "Users"; \
 	adduser -u 141 -D -S -H -h / -G salt salt; \
 	true "Versioning"; \
-	if [ -n "$VERSION_INFO" ]; then echo "$VERSION_INFO" >> /.VERSION_INFO; fi; \
+	if [ -n "$VERSION_INFO" ]; then echo "SaltStack ${SALT_VERSION} - $VERSION_INFO" >> /.VERSION_INFO; fi; \
 	true "Cleanup"; \
 	rm -rf /root/.cache; \
 	apk del --no-network .build-deps; \
