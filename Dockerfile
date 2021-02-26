@@ -3,7 +3,7 @@ FROM registry.gitlab.iitsp.com/allworldit/docker/alpine/v3.12:latest
 ARG VERSION_INFO=
 LABEL maintainer="Nigel Kukard <nkukard@LBSD.net>"
 
-ENV SALT_VERSION=3002.2
+ENV SALT_VERSION=3002.5
 
 RUN set -ex; \
 	true "Salt dependencies"; \
