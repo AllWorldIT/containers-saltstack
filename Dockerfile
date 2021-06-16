@@ -1,9 +1,9 @@
-FROM registry.gitlab.iitsp.com/allworldit/docker/alpine/v3.12:latest
+FROM registry.gitlab.iitsp.com/allworldit/docker/alpine/v3.14:latest
 
 ARG VERSION_INFO=
 LABEL maintainer="Nigel Kukard <nkukard@LBSD.net>"
 
-ENV SALT_VERSION=3002.6
+ENV SALT_VERSION=3003
 
 RUN set -ex; \
 	true "Salt dependencies"; \
