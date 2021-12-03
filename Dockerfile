@@ -36,6 +36,8 @@ RUN set -ex; \
 			linux-headers \
 			py3-setuptools \
 			py3-six \
+# Remove when ZeroMQ >22 is supported by salt
+			zeromq-dev \
 			; \
 	true "Salt pip dependencies"; \
 	pip3 install --upgrade pip; \
