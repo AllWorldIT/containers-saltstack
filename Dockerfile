@@ -1,9 +1,9 @@
-FROM registry.gitlab.iitsp.com/allworldit/docker/alpine/v3.14:latest
+FROM registry.gitlab.iitsp.com/allworldit/docker/alpine:latest
 
 ARG VERSION_INFO=
 LABEL maintainer="Nigel Kukard <nkukard@LBSD.net>"
 
-ENV SALT_VERSION=3003.3
+ENV SALT_VERSION=3004
 
 RUN set -ex; \
 	true "Salt dependencies"; \
@@ -36,6 +36,8 @@ RUN set -ex; \
 			linux-headers \
 			py3-setuptools \
 			py3-six \
+# Remove when ZeroMQ >22 is supported by salt
+			zeromq-dev \
 			; \
 	true "Salt pip dependencies"; \
 	pip3 install --upgrade pip; \
