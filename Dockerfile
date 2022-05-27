@@ -52,6 +52,8 @@ RUN set -ex; \
 	# we only have one version and the "python_version <=> *" checks are discarded
 	# so pyzmq<=20.0.0 ends up in the final requirements.txt
 	echo -e '-r crypto.txt\n\npyzmq' > requirements/zeromq.txt; \
+	# Patch for python 3.10
+	wget -O- https://patch-diff.githubusercontent.com/raw/saltstack/salt/pull/61064.patch | patch -p1; \
 	# Build and install
 	python3 setup.py build; \
 	python3 setup.py --salt-pidfile-dir="/run/salt" install --optimize=1 --skip-build; \
