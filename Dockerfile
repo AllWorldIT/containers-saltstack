@@ -48,6 +48,11 @@ RUN set -ex; \
 	# NK: Touch files as the tar.gz has 1980 dates, which breaks setup.py build
 	tar -zxmf "salt-${SALT_VERSION}.tar.gz"; \
 	cd "salt-${SALT_VERSION}"; \
+	# remove version requirements for pyzmq, there's no point in it
+	# we only have one version and the "python_version <=> *" checks are discarded
+	# so pyzmq<=20.0.0 ends up in the final requirements.txt
+	echo -e '-r crypto.txt\n\npyzmq' > requirements/zeromq.txt; \
+	# Build and install
 	python3 setup.py build; \
 	python3 setup.py --salt-pidfile-dir="/run/salt" install --optimize=1 --skip-build; \
 	cd ..; \
