@@ -104,5 +104,5 @@ VOLUME ["/var/cache/salt"]
 VOLUME ["/srv"]
 
 # Health check
-#HEALTHCHECK CMD salt-run manage.alived
+HEALTHCHECK CMD salt-call --local status.ping_master 127.0.0.1 || exit 1
 
