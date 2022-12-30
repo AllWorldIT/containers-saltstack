@@ -76,22 +76,25 @@ RUN set -ex; \
 COPY etc/salt/master /etc/salt/master
 COPY etc/salt/master.d/50-blank /etc/salt/master.d/50-blank
 COPY etc/supervisor/conf.d/salt-master.conf /etc/supervisor/conf.d/salt-master.conf
-COPY init.d/50-salt-master.sh /docker-entrypoint-init.d/50-salt-master.sh
-COPY pre-init-tests.d/50-salt-master.sh /docker-entrypoint-pre-init-tests.d/50-salt-master.sh
-COPY tests.d/50-salt-master.sh /docker-entrypoint-tests.d/50-salt-master.sh
+COPY init.d/60-salt-master.sh /docker-entrypoint-init.d/60-salt-master.sh
+COPY pre-init-tests.d/60-salt-master.sh /docker-entrypoint-pre-init-tests.d/60-salt-master.sh
+COPY healthcheck.d/60-salt-master.sh /docker-healthcheck.d/60-salt-master.sh
+COPY tests.d/60-salt-master.sh /docker-entrypoint-tests.d/60-salt-master.sh
 RUN set -eux; \
 		mkdir -p /var/log/salt; \
 		chown root:root \
 			/etc/supervisor/conf.d/salt-master.conf \
-			/docker-entrypoint-init.d/50-salt-master.sh \
-			/docker-entrypoint-tests.d/50-salt-master.sh \
-			/docker-entrypoint-pre-init-tests.d/50-salt-master.sh; \
+			/docker-entrypoint-init.d/60-salt-master.sh \
+			/docker-healthcheck.d/60-salt-master.sh \
+			/docker-entrypoint-pre-init-tests.d/60-salt-master.sh \
+			/docker-entrypoint-tests.d/60-salt-master.sh; \
 		chmod 0644 \
 			/etc/supervisor/conf.d/salt-master.conf; \
 		chmod 0755 \
-			/docker-entrypoint-init.d/50-salt-master.sh \
-			/docker-entrypoint-tests.d/50-salt-master.sh \
-			/docker-entrypoint-pre-init-tests.d/50-salt-master.sh; \
+			/docker-entrypoint-init.d/60-salt-master.sh \
+			/docker-healthcheck.d/60-salt-master.sh \
+			/docker-entrypoint-pre-init-tests.d/60-salt-master.sh \
+			/docker-entrypoint-tests.d/60-salt-master.sh; \
 		chown root:salt \
 			/etc/salt/master; \
 		chmod 0640 \
@@ -102,7 +105,3 @@ EXPOSE 4505 4506
 VOLUME ["/etc/salt/pki"]
 VOLUME ["/var/cache/salt"]
 VOLUME ["/srv"]
-
-# Health check
-HEALTHCHECK CMD salt-call --local status.ping_master 127.0.0.1 || exit 1
-
