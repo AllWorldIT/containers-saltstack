@@ -1,3 +1,4 @@
+#!/bin/sh
 # Copyright (c) 2022-2023, AllWorldIT.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,44 +20,8 @@
 # IN THE SOFTWARE.
 
 
-# Listen on all protocols (docker-proxy does this for us)
-interface: '::'
-ipv6: True
+set -e
 
-# Set console logging
-log_level: info
-log_file: /dev/null
+SALTSTACK_VER=$(grep "ENV SALTSTACK_VER" Dockerfile | sed -e 's/ENV SALTSTACK_VER=//')
 
-# Run as non-priv user
-user: salt
-
-# Use 10 worker threads
-worker_threads: 10
-
-# Default timeout of 5 mins
-timeout: 300
-
-# Display CLI summary
-cli_summary: True
-
-# Cache connections
-con_cache: True
-
-# Keep presense info on minions
-presence_events: True
-
-# Ping all minions on key rotation
-ping_on_rotate: True
-
-# Only use the stretegy in the same env we are in
-top_file_merging_strategy: same
-state_top_saltenv: base
-
-file_ignore_regex:
-  - '/\.git($|/)'
-
-file_ignore_glob:
-  - '\*.md'
-
-# Include files from master.d
-include: master.d/*
+export CONTAINER_VERSION_EXTRA="$SALTSTACK_VER"

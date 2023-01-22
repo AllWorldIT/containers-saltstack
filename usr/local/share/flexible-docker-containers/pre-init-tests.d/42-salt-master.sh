@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright (c) 2022-2023, AllWorldIT.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,44 +20,41 @@
 # IN THE SOFTWARE.
 
 
-# Listen on all protocols (docker-proxy does this for us)
-interface: '::'
-ipv6: True
+fdc_notice "Installing packages to support Saltstack testing..."
+apk add pciutils
 
-# Set console logging
-log_level: info
-log_file: /dev/null
 
-# Run as non-priv user
-user: salt
+fdc_notice "Setting up Saltstack test environment..."
 
-# Use 10 worker threads
-worker_threads: 10
+# Setup master
+mkdir /srv/salt
+cat <<EOF > /srv/salt/top.sls
+base:
+    '*':
+      - tests
+EOF
 
-# Default timeout of 5 mins
-timeout: 300
+cat <<EOF > /srv/salt/tests.sls
+/root/test.file:
+    file.managed:
+        - contents: |
+            hello world
+EOF
 
-# Display CLI summary
-cli_summary: True
 
-# Cache connections
-con_cache: True
+# Setup slave
+mkdir /etc/salt/minion.d
+echo "master: localhost" > /etc/salt/minion.d/50-tests.conf
+echo "test.local" > /etc/salt/minion_id
 
-# Keep presense info on minions
-presence_events: True
+cat <<EOF > /etc/supervisor/conf.d/salt-minion.conf
+[program:salt-minion]
+command=/usr/bin/salt-minion
 
-# Ping all minions on key rotation
-ping_on_rotate: True
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
 
-# Only use the stretegy in the same env we are in
-top_file_merging_strategy: same
-state_top_saltenv: base
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+EOF
 
-file_ignore_regex:
-  - '/\.git($|/)'
-
-file_ignore_glob:
-  - '\*.md'
-
-# Include files from master.d
-include: master.d/*

@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright (c) 2022-2023, AllWorldIT.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,44 +20,34 @@
 # IN THE SOFTWARE.
 
 
-# Listen on all protocols (docker-proxy does this for us)
-interface: '::'
-ipv6: True
+# Create salt data directories
+if [ ! -d /srv/salt ]; then
+	fdc_notice "Creating Saltstack /srv/salt"
+	mkdir /srv/salt
+	chown root:salt /srv/salt
+fi
 
-# Set console logging
-log_level: info
-log_file: /dev/null
+if [ ! -d /srv/salt-master ]; then
+	fdc_notice "Creating Saltstack /srv/salt-master"
+	mkdir /srv/salt-master
+	chown root:salt /srv/salt-master
+fi
 
-# Run as non-priv user
-user: salt
+if [ ! -d /srv/pillar ]; then
+	fdc_notice "Creating Saltstack /srv/pillar"
+	mkdir /srv/pillar
+fi
 
-# Use 10 worker threads
-worker_threads: 10
+if [ ! -d /var/cache/salt ]; then
+	fdc_notice "Creating Saltstack /var/cache/salt"
+	mkdir /var/cache/salt
+	chown root:salt /var/cache/salt
+	chmod 0770 /var/cache/salt
+fi
 
-# Default timeout of 5 mins
-timeout: 300
-
-# Display CLI summary
-cli_summary: True
-
-# Cache connections
-con_cache: True
-
-# Keep presense info on minions
-presence_events: True
-
-# Ping all minions on key rotation
-ping_on_rotate: True
-
-# Only use the stretegy in the same env we are in
-top_file_merging_strategy: same
-state_top_saltenv: base
-
-file_ignore_regex:
-  - '/\.git($|/)'
-
-file_ignore_glob:
-  - '\*.md'
-
-# Include files from master.d
-include: master.d/*
+if [ ! -d /var/cache/salt/master ]; then
+	fdc_notice "Creating Saltstack /var/cache/salt/master"
+	mkdir /var/cache/salt/master
+	chown root:salt /var/cache/salt
+	chmod 0770 /var/cache/salt
+fi

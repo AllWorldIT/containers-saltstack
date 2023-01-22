@@ -1,11 +1,5 @@
 include:
-  - project: 'allworldit/docker/gitlab-ci-template'
-    ref: master
+  - project: 'gitlab/templates/containers'
+    ref: main
     file: '/default.yml'
-
-stages:
-  - build
-  - test
-  - release
-  - deploy
 

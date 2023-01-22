@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright (c) 2022-2023, AllWorldIT.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,44 +20,25 @@
 # IN THE SOFTWARE.
 
 
-# Listen on all protocols (docker-proxy does this for us)
-interface: '::'
-ipv6: True
+if ! SALT_TEST_RESULT_IPV4=$( salt-call --local status.ping_master 127.0.0.1 2>&1 ); then
+	fdc_error "Health check failed for Salt IPv4:\n$SALT_TEST_RESULT_IPV4"
+	false
+fi
+if [ -n "$FDC_CI" ]; then
+	fdc_info "Health check for Salt IPv4:\n$SALT_TEST_RESULT_IPV4"
+fi
 
-# Set console logging
-log_level: info
-log_file: /dev/null
 
-# Run as non-priv user
-user: salt
+# Return if we don't have IPv6 support
+if [ -z "$(ip -6 route show default)" ]; then
+	return
+fi
 
-# Use 10 worker threads
-worker_threads: 10
 
-# Default timeout of 5 mins
-timeout: 300
-
-# Display CLI summary
-cli_summary: True
-
-# Cache connections
-con_cache: True
-
-# Keep presense info on minions
-presence_events: True
-
-# Ping all minions on key rotation
-ping_on_rotate: True
-
-# Only use the stretegy in the same env we are in
-top_file_merging_strategy: same
-state_top_saltenv: base
-
-file_ignore_regex:
-  - '/\.git($|/)'
-
-file_ignore_glob:
-  - '\*.md'
-
-# Include files from master.d
-include: master.d/*
+if ! SALT_TEST_RESULT_IPV6=$( salt-call --local status.ping_master ::1 2>&1 ); then
+	fdc_error "Health check failed for Salt IPv6:\n$SALT_TEST_RESULT_IPV6"
+	false
+fi
+if [ -n "$FDC_CI" ]; then
+	fdc_info "Health check for Salt IPv6:\n$SALT_TEST_RESULT_IPV6"
+fi
