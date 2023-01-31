@@ -89,7 +89,7 @@ RUN set -eux; \
 	true "Groups"; \
 	addgroup -g 141 -S salt; \
 	true "Users"; \
-	adduser -u 141 -D -S -H -h / -G salt salt; \
+	adduser -u 141 -D -S -H -h /srv -G salt salt; \
 	true "Cleanup"; \
 	rm -rf /root/.cache; \
 	apk del --no-network .build-deps; \
