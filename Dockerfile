@@ -35,7 +35,6 @@ RUN set -eux; \
 	true "Salt dependencies"; \
 	# Install salt
 	apk add --no-cache \
-		py3-pip \
 		py3-setuptools \
 		py3-distro \
 		py3-pygit2 \
@@ -46,15 +45,13 @@ RUN set -eux; \
 		py3-yaml \
 		py3-certifi \
 		py3-chardet \
+		py3-cherrypy \
 		py3-idna \
 		py3-requests \
 		py3-pyzmq \
 		py3-crypto \
+		py3-wheel \
 		gmp \
-# Cherrypy
-		py3-tz \
-		py3-more-itertools \
-		py3-pycryptodome \
 		; \
 	apk add --no-cache --virtual .build-deps \
 		build-base \
@@ -65,10 +62,6 @@ RUN set -eux; \
 # Remove when ZeroMQ >22 is supported by salt
 		zeromq-dev \
 		; \
-	true "Salt pip dependencies"; \
-	pip3 install --upgrade pip; \
-	pip3 install wheel; \
-	pip3 install cherrypy wheel; \
 	true "Salt build"; \
 	wget "https://pypi.io/packages/source/s/salt/salt-${SALTSTACK_VER}.tar.gz"; \
 	# NK: Touch files as the tar.gz has 1980 dates, which breaks setup.py build
