@@ -44,12 +44,16 @@ EOF
 
 # Setup slave
 mkdir /etc/salt/minion.d
-echo "master: localhost" > /etc/salt/minion.d/50-tests.conf
+if [ "$FDC_CI" == "IPv6" ]; then
+    echo "master: \"::1\"" > /etc/salt/minion.d/50-tests.conf
+else
+    echo "master: 127.0.0.1" > /etc/salt/minion.d/50-tests.conf
+fi
 echo "test.local" > /etc/salt/minion_id
 
 cat <<EOF > /etc/supervisor/conf.d/salt-minion.conf
 [program:salt-minion]
-command=/usr/bin/salt-minion
+command=/usr/bin/salt-minion -l debug
 
 stderr_logfile=/dev/stderr
 stderr_logfile_maxbytes=0
