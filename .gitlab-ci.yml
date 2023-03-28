@@ -3,3 +3,35 @@ include:
     ref: main
     file: '/default.yml'
 
+
+.docker_login_template: &docker_login
+  before_script:
+    # Group login incase we need to pull group images from a private registry
+    - |
+      if [ -n "$GROUP_CI_REGISTRY_USER" -a -n "$GROUP_CI_REGISTRY_PASSWORD" ]; then
+        echo "Group CI login to '${GROUP_CI_REGISTRY}'...";
+        echo "$GROUP_CI_REGISTRY_PASSWORD" | docker login --username "$GROUP_CI_REGISTRY_USER" --password-stdin "$GROUP_CI_REGISTRY";
+      fi
+    # Login to this repositories registry
+    - echo "$CI_REGISTRY_PASSWORD" | docker login --username "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+
+
+test:
+  stage: test
+  <<: *docker_login
+  parallel:
+    matrix:
+      - WITH_IP: [ "IPv4", "IPv6" ]
+  script:
+    - |
+      set -x
+      echo "Pulling '$PIPELINE_IMAGE'..."
+      docker pull "$PIPELINE_IMAGE"
+      if [ -n "$RUN_TESTS_PRIVILEGED" ]; then
+        docker run --privileged -e FDC_CI="$WITH_IP" "$PIPELINE_IMAGE"
+      else
+        docker run -e FDC_CI="$WITH_IP" "$PIPELINE_IMAGE"
+      fi
+      set +x
+  dependencies:
+    - build

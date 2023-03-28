@@ -28,19 +28,35 @@ fi
 fdc_test_pass saltstack "Saltstack supports pygit2"
 
 
-fdc_test_start saltstack "Waiting for salt-minion..."
-for i in $(seq 1 30); do
+fdc_test_start saltstack "Waiting for salt-minion key..."
+for i in $(seq 0 120); do
 	if [ -e /etc/salt/pki/master/minions_pre/test.local ]; then
 		break
 	fi
-	fdc_test_progress saltstack "Waiting for salt-master to get salt-minion connection... $i"
+	fdc_test_progress saltstack "Waiting for salt-master to get salt-minion key... ${i}s"
 	sleep 1
 done
+if [ "$i" = 120 ]; then
+	fdc_test_fail saltstack "Minion key was never received"
+	false
+fi
 fdc_test_pass saltstack "Minion is READY!"
 
 
 fdc_test_start saltstack "Accepting salt-minion key"
-echo y | salt-key -a test.local
+for i in $(seq 0 120); do
+	ACCEPT_RESULT=$(echo y | salt-key -a test.local 2>&1)
+	echo "$ACCEPT_RESULT"
+	if ! grep "does not match any unaccepted keys" <<<"$ACCEPT_RESULT"; then
+		break
+	fi
+	fdc_test_progress saltstack "Waiting for key accept to succeed... ${i}s"
+	sleep 1
+done
+if [ "$i" = 120 ]; then
+	fdc_test_fail saltstack "Minion key could not be accepted"
+	false
+fi
 fdc_test_pass saltstack "Key accepted for salt-minion"
 
 
