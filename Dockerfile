@@ -51,6 +51,7 @@ RUN set -eux; \
 		py3-pyzmq \
 		py3-crypto \
 		py3-wheel \
+		py3-looseversion \
 		gmp \
 		; \
 	apk add --no-cache --virtual .build-deps \
