@@ -19,13 +19,13 @@
 # IN THE SOFTWARE.
 
 
-FROM registry.conarx.tech/containers/alpine/3.18
+FROM registry.conarx.tech/containers/alpine/3.19
 
 
 ARG VERSION_INFO=
 LABEL org.opencontainers.image.authors   "Nigel Kukard <nkukard@conarx.tech>"
-LABEL org.opencontainers.image.version   "3.18"
-LABEL org.opencontainers.image.base.name "registry.conarx.tech/containers/alpine/3.18"
+LABEL org.opencontainers.image.version   "3.19"
+LABEL org.opencontainers.image.base.name "registry.conarx.tech/containers/alpine/3.19"
 
 
 ENV SALTSTACK_VER=3006.5
@@ -51,6 +51,7 @@ RUN set -eux; \
 		py3-pyzmq \
 		py3-crypto \
 		py3-wheel \
+		py3-looseversion \
 		gmp \
 		; \
 	apk add --no-cache --virtual .build-deps \
