@@ -30,6 +30,7 @@ LABEL org.opencontainers.image.base.name "registry.conarx.tech/containers/alpine
 
 ENV SALTSTACK_VER=3006.7
 
+COPY patches/ /patches/
 
 RUN set -eux; \
 	true "Salt dependencies"; \
@@ -72,8 +73,9 @@ RUN set -eux; \
 	# we only have one version and the "python_version <=> *" checks are discarded
 	# so pyzmq<=20.0.0 ends up in the final requirements.txt
 	echo -e '-r crypto.txt\n\npyzmq' > requirements/zeromq.txt; \
-	# Patch for python 3.10
-	# wget -O- https://patch-diff.githubusercontent.com/raw/saltstack/salt/pull/61064.patch | patch -p1;
+	# Patch issue with newlines
+	patch -p1 < /patches/66140-fixed.patch; \
+	rm -rf /patches; \
 	# Build and install
 	python3 setup.py build; \
 	python3 setup.py --salt-pidfile-dir="/run/salt" install --optimize=1 --skip-build; \
