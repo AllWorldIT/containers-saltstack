@@ -28,31 +28,34 @@ LABEL org.opencontainers.image.version   "3.19"
 LABEL org.opencontainers.image.base.name "registry.conarx.tech/containers/alpine/3.19"
 
 
-ENV SALTSTACK_VER=3006.7
+ENV SALTSTACK_VER=3007.0
 
-COPY patches/ /patches/
+#COPY patches/ /patches/
 
 RUN set -eux; \
 	true "Salt dependencies"; \
 	# Install salt
 	apk add --no-cache \
-		py3-setuptools \
-		py3-distro \
-		py3-pygit2 \
-		py3-dateutil \
-		py3-urllib3 \
-		py3-jinja2 \
-		py3-msgpack \
-		py3-yaml \
+		py3-aiohttp \
 		py3-certifi \
 		py3-chardet \
 		py3-cherrypy \
-		py3-idna \
-		py3-requests \
-		py3-pyzmq \
 		py3-crypto \
-		py3-wheel \
+		py3-dateutil \
+		py3-distro \
+		py3-idna \
+		py3-jinja2 \
 		py3-looseversion \
+		py3-msgpack \
+		py3-openssl \
+		py3-pygit2 \
+		py3-pyzmq \
+		py3-requests \
+		py3-setuptools \
+		py3-tornado \
+		py3-urllib3 \
+		py3-wheel \
+		py3-yaml \
 		gmp \
 		; \
 	apk add --no-cache --virtual .build-deps \
@@ -61,6 +64,7 @@ RUN set -eux; \
 		linux-headers \
 		py3-setuptools \
 		py3-six \
+		py3-pip \
 # Remove when ZeroMQ >22 is supported by salt
 		zeromq-dev \
 		; \
@@ -74,9 +78,12 @@ RUN set -eux; \
 	# so pyzmq<=20.0.0 ends up in the final requirements.txt
 	echo -e '-r crypto.txt\n\npyzmq' > requirements/zeromq.txt; \
 	# Patch issue with newlines
-	patch -p1 < /patches/66140-fixed.patch; \
-	rm -rf /patches; \
+	# patch -p1 < /patches/66140-fixed.patch; \
+	# rm -rf /patches; \
 	# Build and install
+	pip install --no-cache --use-pep517 --break-system-packages cython pyopenssl timelib; \
+	# python -m build --wheel --no-isolation; \
+	# python -m installer dist/*.whl
 	python3 setup.py build; \
 	python3 setup.py --salt-pidfile-dir="/run/salt" install --optimize=1 --skip-build; \
 	cd ..; \
