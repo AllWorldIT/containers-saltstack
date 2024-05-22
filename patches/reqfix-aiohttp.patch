@@ -1,0 +1,12 @@
+diff --color -ru salt-3007.1_vanilla/requirements/base.txt salt-3007.1_reqfix/requirements/base.txt
+--- salt-3007.1_vanilla/requirements/base.txt	2024-05-19 12:59:07.000000000 +0000
++++ salt-3007.1_reqfix/requirements/base.txt	2024-05-22 19:16:52.640587971 +0000
+@@ -11,7 +11,7 @@
+ packaging>=21.3
+ looseversion
+ tornado>=6.3.3
+-aiohttp>=3.9.0
++aiohttp>=3.9.0,<4.0.0
+ 
+ # We need contextvars for salt-ssh.
+ # Even on python versions which ships with contextvars in the standard library!
