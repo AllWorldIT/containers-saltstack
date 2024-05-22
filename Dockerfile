@@ -28,7 +28,7 @@ LABEL org.opencontainers.image.version   "3.19"
 LABEL org.opencontainers.image.base.name "registry.conarx.tech/containers/alpine/3.19"
 
 
-ENV SALTSTACK_VER=3007.0
+ENV SALTSTACK_VER=3007.1
 
 #COPY patches/ /patches/
 
