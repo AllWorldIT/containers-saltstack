@@ -1,0 +1,14 @@
+diff --color -ruN salt-3007.1_vanilla/salt/utils/url.py salt-3007.1_urlfix/salt/utils/url.py
+--- salt-3007.1_vanilla/salt/utils/url.py	2024-05-19 12:59:07.000000000 +0000
++++ salt-3007.1_urlfix/salt/utils/url.py	2024-09-15 17:29:41.510096708 +0000
+@@ -47,7 +47,9 @@
+ 
+     query = f"saltenv={saltenv}" if saltenv else ""
+     url = salt.utils.data.decode(urlunparse(("file", "", path, "", query, "")))
+-    return "salt://{}".format(url[len("file:///") :])
++    # NK: for some reason this ends up as file: so lets hack around it for now
++    nkhack = url.replace("file:///", "file:")
++    return "salt://{}".format(nkhack[len("file:") :])
+ 
+ 
+ def is_escaped(url):
